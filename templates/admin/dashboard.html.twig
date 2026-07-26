@@ -1,0 +1,116 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Tableau de bord - Administrateur{% endblock %}
+
+{% block body %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h4 class="fw-bold mb-1">Tableau de Bord Administrateur</h4>
+        <p class="text-muted small mb-0">Aperçu global du système et statistiques des soutenances</p>
+    </div>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-md-3">
+        <div class="stat-card p-3 d-flex align-items-center justify-content-between">
+            <div>
+                <div class="text-muted small fw-medium">Étudiants</div>
+                <div class="fs-3 fw-bold text-dark">{{ totalStudents }}</div>
+            </div>
+            <div class="bg-primary-subtle text-primary p-3 rounded-circle">
+                <i class="bi bi-people fs-4"></i>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stat-card p-3 d-flex align-items-center justify-content-between">
+            <div>
+                <div class="text-muted small fw-medium">Enseignants</div>
+                <div class="fs-3 fw-bold text-dark">{{ totalTeachers }}</div>
+            </div>
+            <div class="bg-success-subtle text-success p-3 rounded-circle">
+                <i class="bi bi-person-badge fs-4"></i>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stat-card p-3 d-flex align-items-center justify-content-between">
+            <div>
+                <div class="text-muted small fw-medium">Salles</div>
+                <div class="fs-3 fw-bold text-dark">{{ totalRooms }}</div>
+            </div>
+            <div class="bg-warning-subtle text-warning p-3 rounded-circle">
+                <i class="bi bi-door-closed fs-4"></i>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stat-card p-3 d-flex align-items-center justify-content-between">
+            <div>
+                <div class="text-muted small fw-medium">Soutenances</div>
+                <div class="fs-3 fw-bold text-dark">{{ totalDefenses }}</div>
+            </div>
+            <div class="bg-info-subtle text-info p-3 rounded-circle">
+                <i class="bi bi-calendar-event fs-4"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-md-8">
+        <div class="card border-0 shadow-sm rounded-4 p-3">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h6 class="fw-bold mb-0">Dernières Soutenances Programmées</h6>
+                <a href="{{ path('admin_defense_index') }}" class="btn btn-sm btn-link text-decoration-none">Voir tout</a>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle small mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Étudiant</th>
+                            <th>Date & Heure</th>
+                            <th>Salle</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for def in latestDefenses %}
+                            <tr>
+                                <td class="fw-medium">{{ def.student.nom }} {{ def.student.prenom }}</td>
+                                <td>{{ def.dateDefense|date('d/m/Y') }} à {{ def.timeDefense|date('H:i') }}</td>
+                                <td><span class="badge bg-secondary-subtle text-secondary">{{ def.room.code }}</span></td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="3" class="text-center text-muted py-3">Aucune soutenance programmée pour le moment.</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm rounded-4 p-3">
+            <h6 class="fw-bold mb-3">Raccourcis Administrateur</h6>
+            <div class="d-grid gap-2">
+                <a href="{{ path('admin_defense_new') }}" class="btn btn-outline-primary text-start p-2 d-flex align-items-center gap-2">
+                    <i className="bi bi-calendar-plus fs-5"></i>
+                    <div>
+                        <div class="fw-semibold">Programmer une soutenance</div>
+                        <div class="text-muted small">Affecter jury et salle sans conflit</div>
+                    </div>
+                </a>
+                <a href="{{ path('admin_student_new') }}" class="btn btn-outline-secondary text-start p-2 d-flex align-items-center gap-2">
+                    <i className="bi bi-person-plus fs-5"></i>
+                    <div>
+                        <div class="fw-semibold">Inscrire un étudiant</div>
+                        <div class="text-muted small">Ajouter mémoire et thème</div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

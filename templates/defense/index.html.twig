@@ -1,0 +1,83 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Programme des Soutenances{% endblock %}
+
+{% block body %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h4 class="fw-bold mb-1">Programme des Soutenances</h4>
+        <p class="text-muted small mb-0">Calendrier des soutenances avec jurys et salles assignés</p>
+    </div>
+    <a href="{{ path('admin_defense_new') }}" class="btn btn-primary d-flex align-items-center gap-2">
+        <i class="bi bi-calendar-plus"></i> Programmer une soutenance
+    </a>
+</div>
+
+<div class="card border-0 shadow-sm rounded-4 p-3 mb-4">
+    <form method="get" action="{{ path('admin_defense_index') }}" class="row g-2 align-items-center">
+        <div class="col-md-4">
+            <label class="form-label small text-muted">Filtrer par date</label>
+            <input type="date" name="date" value="{{ dateFilter }}" class="form-control">
+        </div>
+        <div class="col-md-2 pt-3">
+            <button type="submit" class="btn btn-secondary w-100 mt-3">Filtrer</button>
+        </div>
+        {% if dateFilter %}
+            <div class="col-md-2 pt-3">
+                <a href="{{ path('admin_defense_index') }}" class="btn btn-outline-secondary w-100 mt-3">Réinitialiser</a>
+            </div>
+        {% endif %}
+    </form>
+</div>
+
+<div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th>Étudiant</th>
+                    <th>Thème</th>
+                    <th>Date & Heure</th>
+                    <th>Salle</th>
+                    <th>Jury</th>
+                    <th class="text-end">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for def in defenses %}
+                    <tr>
+                        <td>
+                            <div class="fw-semibold">{{ def.student.nom }} {{ def.student.prenom }}</div>
+                            <div class="text-muted small">{{ def.student.filiere }}</div>
+                        </td>
+                        <td style="max-width: 200px;" class="text-muted small text-truncate">{{ def.student.theme }}</td>
+                        <td>
+                            <div class="fw-semibold">{{ def.dateDefense|date('d/m/Y') }}</div>
+                            <div class="badge bg-primary-subtle text-primary">{{ def.timeDefense|date('H:i') }}</div>
+                        </td>
+                        <td><span class="badge bg-secondary-subtle text-secondary fw-semibold">{{ def.room.code }}</span></td>
+                        <td class="small text-muted">
+                            <div><span class="text-success fw-semibold">Prés.</span> {{ def.president.nom }}</div>
+                            <div><span class="text-warning fw-semibold">Rapp.</span> {{ def.rapporteur.nom }}</div>
+                            <div><span class="text-danger fw-semibold">Exam.</span> {{ def.examinateur.nom }}</div>
+                        </td>
+                        <td class="text-end">
+                            <a href="{{ path('admin_defense_edit', {'id': def.id}) }}" class="btn btn-sm btn-outline-secondary me-1">
+                                <i class="bi bi-pencil"></i>
+                            </a>
+                            <form method="post" action="{{ path('admin_defense_delete', {'id': def.id}) }}" class="d-inline" onsubmit="return confirm('Annuler cette soutenance ?');">
+                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ def.id) }}">
+                                <button class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
+                            </form>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="6" class="text-center text-muted py-4">Aucune soutenance programmée.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

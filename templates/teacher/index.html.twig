@@ -1,0 +1,52 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gestion des Enseignants{% endblock %}
+
+{% block body %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h4 class="fw-bold mb-1">Gestion des Enseignants</h4>
+        <p class="text-muted small mb-0">Liste du corps professoral participant aux jurys de soutenance</p>
+    </div>
+    <a href="{{ path('admin_teacher_new') }}" class="btn btn-primary d-flex align-items-center gap-2">
+        <i class="bi bi-plus-lg"></i> Ajouter un enseignant
+    </a>
+</div>
+
+<div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th>Nom & Prénom</th>
+                    <th>Adresse Email</th>
+                    <th>Spécialité</th>
+                    <th class="text-end">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for teacher in teachers %}
+                    <tr>
+                        <td class="fw-semibold">{{ teacher.nom }} {{ teacher.prenom }}</td>
+                        <td class="text-muted">{{ teacher.email }}</td>
+                        <td><span class="badge bg-primary-subtle text-primary">{{ teacher.specialite }}</span></td>
+                        <td class="text-end">
+                            <a href="{{ path('admin_teacher_edit', {'id': teacher.id}) }}" class="btn btn-sm btn-outline-secondary me-1">
+                                <i class="bi bi-pencil"></i>
+                            </a>
+                            <form method="post" action="{{ path('admin_teacher_delete', {'id': teacher.id}) }}" class="d-inline" onsubmit="return confirm('Supprimer cet enseignant ?');">
+                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ teacher.id) }}">
+                                <button class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
+                            </form>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="4" class="text-center text-muted py-4">Aucun enseignant enregistré.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

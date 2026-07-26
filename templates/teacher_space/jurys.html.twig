@@ -1,0 +1,61 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mes Jurys{% endblock %}
+
+{% block body %}
+<div class="mb-4">
+    <h4 class="fw-bold mb-1">Mes Compositions de Jury</h4>
+    <p class="text-muted small">Détail complet des jurys auxquels vous participez avec vos collègues.</p>
+</div>
+
+<div class="row g-3">
+    {% for def in defenses %}
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm rounded-4 p-3">
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                    <div>
+                        <div class="fw-bold text-dark">{{ def.student.nom }} {{ def.student.prenom }}</div>
+                        <div class="text-muted small">{{ def.student.filiere }}</div>
+                    </div>
+                    <div class="text-end">
+                        <div class="badge bg-primary-subtle text-primary mb-1">{{ def.dateDefense|date('d/m/Y') }}</div>
+                        <div class="badge bg-secondary-subtle text-secondary">{{ def.timeDefense|date('H:i') }} — {{ def.room.code }}</div>
+                    </div>
+                </div>
+                <p class="small text-muted fst-italic border-start border-primary ps-2 mb-3">{{ def.student.theme }}</p>
+
+                <div class="border-top pt-2 mt-1">
+                    <div class="small fw-semibold text-muted mb-2">Composition du Jury</div>
+                    <div class="d-flex flex-column gap-1">
+                        <div class="d-flex justify-content-between">
+                            <span class="text-muted small">Président</span>
+                            <span class="fw-semibold small {% if teacher and def.president.id == teacher.id %}text-success{% endif %}">
+                                {{ def.president.nom }} {{ def.president.prenom }}
+                                {% if teacher and def.president.id == teacher.id %}<i class="bi bi-check-circle-fill text-success ms-1"></i>{% endif %}
+                            </span>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <span class="text-muted small">Rapporteur</span>
+                            <span class="fw-semibold small {% if teacher and def.rapporteur.id == teacher.id %}text-warning{% endif %}">
+                                {{ def.rapporteur.nom }} {{ def.rapporteur.prenom }}
+                                {% if teacher and def.rapporteur.id == teacher.id %}<i class="bi bi-check-circle-fill text-warning ms-1"></i>{% endif %}
+                            </span>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <span class="text-muted small">Examinateur</span>
+                            <span class="fw-semibold small {% if teacher and def.examinateur.id == teacher.id %}text-danger{% endif %}">
+                                {{ def.examinateur.nom }} {{ def.examinateur.prenom }}
+                                {% if teacher and def.examinateur.id == teacher.id %}<i class="bi bi-check-circle-fill text-danger ms-1"></i>{% endif %}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <div class="col-12 text-center text-muted py-5">
+            Aucun jury affecté pour le moment.
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}

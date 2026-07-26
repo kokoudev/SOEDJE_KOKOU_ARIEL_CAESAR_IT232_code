@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ajouter un enseignant{% endblock %}
+
+{% block body %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card border-0 shadow-sm rounded-4 p-4">
+            <h4 class="fw-bold mb-3">Nouveau Enseignant</h4>
+            {{ form_start(form) }}
+                {{ form_widget(form) }}
+                <div class="d-flex justify-content-end gap-2 mt-4">
+                    <a href="{{ path('admin_teacher_index') }}" class="btn btn-light">Annuler</a>
+                    <button type="submit" class="btn btn-primary px-4">Enregistrer</button>
+                </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
+</div>
+{% endblock %}

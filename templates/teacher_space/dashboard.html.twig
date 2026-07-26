@@ -1,0 +1,88 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mon Espace Enseignant{% endblock %}
+
+{% block body %}
+<div class="mb-4">
+    <h4 class="fw-bold mb-1">Bonjour, {{ teacher ? teacher.prenom ~ ' ' ~ teacher.nom : app.user.prenom ~ ' ' ~ app.user.nom }}</h4>
+    <p class="text-muted small">Voici un récapitulatif de vos prochaines participations aux jurys de soutenance.</p>
+</div>
+
+{% if not teacher %}
+    <div class="alert alert-warning rounded-3">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+        Votre compte enseignant n'est pas encore lié à un profil d'enseignant. Contactez l'administrateur.
+    </div>
+{% else %}
+    <div class="row g-3 mb-4">
+        <div class="col-md-4">
+            <div class="stat-card p-3 d-flex align-items-center justify-content-between">
+                <div>
+                    <div class="text-muted small fw-medium">Soutenances assignées</div>
+                    <div class="fs-3 fw-bold">{{ defenses|length }}</div>
+                </div>
+                <div class="bg-primary-subtle text-primary p-3 rounded-circle">
+                    <i class="bi bi-calendar-event fs-4"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="stat-card p-3 d-flex align-items-center justify-content-between">
+                <div>
+                    <div class="text-muted small fw-medium">Spécialité</div>
+                    <div class="fw-semibold text-dark">{{ teacher.specialite }}</div>
+                </div>
+                <div class="bg-success-subtle text-success p-3 rounded-circle">
+                    <i class="bi bi-award fs-4"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+        <div class="card-header bg-white border-bottom py-3">
+            <h6 class="fw-bold mb-0">Mes prochaines Soutenances</h6>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Étudiant</th>
+                        <th>Date & Heure</th>
+                        <th>Salle</th>
+                        <th>Mon Rôle</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for def in defenses %}
+                        <tr>
+                            <td>
+                                <div class="fw-semibold">{{ def.student.nom }} {{ def.student.prenom }}</div>
+                                <div class="text-muted small text-truncate" style="max-width: 220px;">{{ def.student.theme }}</div>
+                            </td>
+                            <td>
+                                <div class="fw-semibold">{{ def.dateDefense|date('d/m/Y') }}</div>
+                                <span class="badge bg-primary-subtle text-primary">{{ def.timeDefense|date('H:i') }}</span>
+                            </td>
+                            <td class="fw-medium text-secondary">{{ def.room.code }}</td>
+                            <td>
+                                {% if def.president.id == teacher.id %}
+                                    <span class="badge bg-success-subtle text-success">Président</span>
+                                {% elseif def.rapporteur.id == teacher.id %}
+                                    <span class="badge bg-warning-subtle text-warning">Rapporteur</span>
+                                {% else %}
+                                    <span class="badge bg-danger-subtle text-danger">Examinateur</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="4" class="text-center text-muted py-4">Aucune soutenance affectée pour l'instant.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endif %}
+{% endblock %}
